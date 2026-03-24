@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/screens/home_screen.dart';
+import 'package:superbase_auth/screens/qr_scanner.dart';
+import 'package:superbase_auth/screens/socket_connection.dart';
 import 'package:superbase_auth/services/crud.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,11 +39,37 @@ class AuthApp extends StatefulWidget {
 
 class _AuthApp extends State<AuthApp> {
   Map<String, dynamic>? _authUserData;
+
+  bool isOpen = false;
+  String message = "";
+  late IO.Socket socket;
+  String messages = "INIT";
+  late MobileScannerController camController;
+
   @override
   void initState() {
     super.initState();
     if (!mounted) return;
 
+    //cam controller intialization
+    camController = MobileScannerController();
+
+    socket = IO.io('http://192.168.43.222:3000', <String, dynamic>{
+      'transports': ['websocket'],
+    });
+
+    socket.onConnect((_) {
+      print('❤️❤️❤️❤️connected');
+      socket.emit('send_message', 'Hello from Flutter');
+    });
+
+    socket.on('receive_message', (data) {
+      setState(() {
+        messages = (data);
+      });
+    });
+
+    socket.onDisconnect((_) => print('disconnected'));
     supabase.auth.onAuthStateChange.listen((data) async {
       final user = data.session?.user;
       final newUserData = data.session?.user.userMetadata;
@@ -53,11 +83,59 @@ class _AuthApp extends State<AuthApp> {
     });
   }
 
+  String qrCode = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("SUPABASE + FLUTTER")),
-      body: Center(child: HomeScreen(authUserData: _authUserData)),
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 4,
+              child: MobileScanner(
+                controller: camController,
+                onDetect: (barcodeCapture) {
+                  final List<Barcode> barcodes = barcodeCapture.barcodes;
+
+                  for (final barcode in barcodes) {
+                    setState(() {
+                      qrCode = barcode.rawValue!;
+                    });
+                  }
+                  socket.emit("send_message", qrCode);
+                  camController.stop();
+                },
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Center(
+                child: Column(
+                  children: [
+                    // qrCode.isNotEmpty
+                    //     ? ElevatedButton(
+                    //         onPressed: () {
+                    //           socket.emit("send_message", qrCode);
+                    //         },
+                    //         child: Icon(Icons.send),
+                    //       )
+                    //     : SizedBox(),
+                    // Text("DONE", style: const TextStyle(fontSize: 18)),
+                    ElevatedButton(
+                      onPressed: () {
+                        camController.start();
+                      },
+                      child: Icon(Icons.clear),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

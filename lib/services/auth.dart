@@ -6,6 +6,8 @@ import 'package:superbase_auth/main.dart';
 Future<void> nativeGoogleSignIn() async {
   final webClientId = dotenv.env['WEB_CLIENT_ID'];
   final iosClientId = dotenv.env['IOS_CLIENT_ID'];
+  print('WEB_CLIENT_ID❤️💕: $webClientId'); // add this
+
   final googleSignIn = GoogleSignIn(
     clientId: iosClientId,
     serverClientId: webClientId,
