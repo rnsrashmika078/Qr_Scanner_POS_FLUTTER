@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/screens/qr_scanner.dart';
-import 'package:superbase_auth/screens/socket_connection.dart';
 import 'package:superbase_auth/services/crud.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -88,7 +86,7 @@ class _AuthApp extends State<AuthApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("SUPABASE + FLUTTER")),
+      appBar: AppBar(title: Text("POS TERMINAL _ QR _ SCANNER ")),
       body: Center(
         child: Column(
           children: [
