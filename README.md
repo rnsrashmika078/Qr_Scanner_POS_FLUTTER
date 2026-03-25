@@ -12,7 +12,7 @@ https://console.cloud.google.com/apis/dashboard?authuser=2&orgonly=true&project=
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/main.dart';
+import 'package:PosTerminal/main.dart';
 
 Future<void> nativeGoogleSignIn() async {
   await dotenv.load();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:superbase_auth/main.dart';
-import 'package:superbase_auth/services/crud.dart';
+import 'package:PosTerminal/main.dart';
+import 'package:PosTerminal/services/crud.dart';
 
 class Store extends StatelessWidget {
   const Store({super.key});

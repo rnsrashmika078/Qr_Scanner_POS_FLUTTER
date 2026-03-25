@@ -1,4 +1,4 @@
-package com.example.superbase_auth
+package com.example.PosTerminal
 
 import io.flutter.embedding.android.FlutterActivity
 

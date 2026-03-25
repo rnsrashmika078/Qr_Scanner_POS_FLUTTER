@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/main.dart';
-import 'package:superbase_auth/screens/store.dart';
-import 'package:superbase_auth/services/auth.dart';
+import 'package:PosTerminal/main.dart';
+import 'package:PosTerminal/screens/store.dart';
+import 'package:PosTerminal/services/auth.dart';
 
 class HomeScreen extends StatelessWidget {
   final Map<String, dynamic>? authUserData;

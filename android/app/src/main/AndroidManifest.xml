@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:label="superbase_auth" android:name="${applicationName}"
+    <application android:label="PosTerminal" android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity android:name=".MainActivity" android:exported="true"
             android:launchMode="singleTop" android:taskAffinity=""

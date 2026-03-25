@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/main.dart';
+import 'package:PosTerminal/main.dart';
 
 Future<void> nativeGoogleSignIn() async {
   final webClientId = dotenv.env['WEB_CLIENT_ID'];

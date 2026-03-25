@@ -1,6 +1,6 @@
 {
-    "name": "superbase_auth",
-    "short_name": "superbase_auth",
+    "name": "PosTerminal",
+    "short_name": "PosTerminal",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

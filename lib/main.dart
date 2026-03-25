@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:superbase_auth/services/crud.dart';
-
+import 'package:PosTerminal/helper/helper_class.dart';
+import 'package:PosTerminal/screens/dashboard_screen.dart';
+import 'package:PosTerminal/services/crud.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'dart:convert';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+late IO.Socket socket;
+
 class AuthApp extends StatefulWidget {
   const AuthApp({super.key});
 
@@ -37,37 +40,25 @@ class AuthApp extends StatefulWidget {
 
 class _AuthApp extends State<AuthApp> {
   Map<String, dynamic>? _authUserData;
-
   bool isOpen = false;
   String message = "";
-  late IO.Socket socket;
   String messages = "INIT";
-  late MobileScannerController camController;
+  // String qrResult = '{"name": "Rashmika", "age": 23}';
+  // Map<String, dynamic> data = {};
+  // String name = "";
+  // int age = 0;
 
   @override
   void initState() {
     super.initState();
-    if (!mounted) return;
+    initSocket();
 
-    //cam controller intialization
-    camController = MobileScannerController();
+    // setState(() {
+    //   data = jsonDecode(qrResult);
+    //   age = data['age'];
+    //   name = data['name'];
+    // });
 
-    socket = IO.io('http://192.168.43.222:3000', <String, dynamic>{
-      'transports': ['websocket'],
-    });
-
-    socket.onConnect((_) {
-      print('❤️❤️❤️❤️connected');
-      socket.emit('send_message', 'Hello from Flutter');
-    });
-
-    socket.on('receive_message', (data) {
-      setState(() {
-        messages = (data);
-      });
-    });
-
-    socket.onDisconnect((_) => print('disconnected'));
     supabase.auth.onAuthStateChange.listen((data) async {
       final user = data.session?.user;
       final newUserData = data.session?.user.userMetadata;
@@ -86,54 +77,11 @@ class _AuthApp extends State<AuthApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("POS TERMINAL _ QR _ SCANNER ")),
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 4,
-              child: MobileScanner(
-                controller: camController,
-                onDetect: (barcodeCapture) {
-                  final List<Barcode> barcodes = barcodeCapture.barcodes;
-
-                  for (final barcode in barcodes) {
-                    setState(() {
-                      qrCode = barcode.rawValue!;
-                    });
-                  }
-                  socket.emit("send_message", qrCode);
-                  camController.stop();
-                },
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Center(
-                child: Column(
-                  children: [
-                    // qrCode.isNotEmpty
-                    //     ? ElevatedButton(
-                    //         onPressed: () {
-                    //           socket.emit("send_message", qrCode);
-                    //         },
-                    //         child: Icon(Icons.send),
-                    //       )
-                    //     : SizedBox(),
-                    // Text("DONE", style: const TextStyle(fontSize: 18)),
-                    ElevatedButton(
-                      onPressed: () {
-                        camController.start();
-                      },
-                      child: Icon(Icons.clear),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text("Pos Terminal",style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.blue,
       ),
+      body: Center(child: DashboardScreen()),
     );
   }
 }

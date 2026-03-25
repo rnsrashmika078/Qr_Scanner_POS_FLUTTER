@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:superbase_auth/main.dart';
+import 'package:PosTerminal/main.dart';
 
 final user = supabase.auth.currentUser;
 
